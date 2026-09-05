@@ -8,19 +8,6 @@ It answers natural-language questions such as:
 
 The app translates broad film-room questions into transparent filters, retrieves matching play-by-play evidence, calculates a statistical profile, and asks Claude to produce a structured scouting report with exact play citations. It ships with a real 2025 NFLverse season covering all 32 teams and still provides local analysis when no API key is configured.
 
-## Why this is a strong Claude Builder Club project
-
-This is more than a chatbot wrapper. It demonstrates a complete AI workflow:
-
-- Retrieval before generation: football filters are applied locally before Claude sees the data.
-- Grounding: the prompt uses XML-delimited evidence and requires citations copied from the evidence ledger.
-- Structured output: Claude returns JSON matching a schema for summaries, tendencies, matchup hypotheses, limitations, confidence, and citations.
-- Honest uncertainty: small samples and relaxed filters are surfaced to the user.
-- Evaluation: the test suite checks natural-language filter extraction and evidence grounding.
-- Human review: matchup ideas are explicitly hypotheses to verify in a larger sample, not automated coaching decisions.
-
-Anthropic’s current Python API uses `client.messages.create(...)`; this project uses the current `output_config.format` JSON-schema pattern. See the [Messages API reference](https://platform.claude.com/docs/en/api/messages/create) and [structured outputs guide](https://platform.claude.com/docs/en/build-with-claude/structured-outputs).
-
 ## Tech stack
 
 | Tool | Why it is used |
