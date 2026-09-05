@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Gridline Scout — NFL Film Intelligence</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="topbar">
+        <a class="brand" href="/">
+          <span class="brand-mark">⌁</span>
+          <span>GRIDLINE SCOUT</span>
+        </a>
+        <div class="topbar-right">
+          <span class="data-pill"><span class="status-dot"></span>{{ data_label }}</span>
+          <a href="https://github.com/nflverse/nflverse-data" target="_blank" rel="noreferrer">NFLVERSE ↗</a>
+        </div>
+      </header>
+
+      <main>
+        <section class="hero">
+          <div class="eyebrow">NFL FILM INTELLIGENCE / 001</div>
+          <h1>Ask the film room.<br /><em>Get the evidence.</em></h1>
+          <p class="hero-copy">A Claude-powered scouting assistant that retrieves the most relevant NFL plays first, then turns them into a source-linked report you can challenge.</p>
+        </section>
+
+        <section class="query-card">
+          <div class="card-label">01 / SCOUTING QUESTION</div>
+          <form id="question-form">
+            <div class="form-row">
+              <label class="team-control">
+                <span>TEAM</span>
+                <select id="team-select" name="team">
+                  <option value="">All teams</option>
+                  {% for team in teams %}<option value="{{ team }}">{{ team }}</option>{% endfor %}
+                </select>
+              </label>
+              <label class="side-control">
+                <span>VIEW</span>
+                <select id="side-select" name="side">
+                  <option value="auto">Auto</option>
+                  <option value="offense">Offense</option>
+                  <option value="defense">Defense</option>
+                  <option value="both">Either side</option>
+                </select>
+              </label>
+              <label class="question-control">
+                <span>QUESTION</span>
+                <input id="question" name="question" maxlength="500" autocomplete="off" placeholder="What does KC do on 3rd and long?" required />
+              </label>
+              <button id="ask-button" type="submit"><span>RUN SCOUT</span><span class="arrow">↗</span></button>
+            </div>
+          </form>
+          <div class="examples" aria-label="Example questions">
+            <span class="examples-label">TRY</span>
+            <button class="example-button" data-question="What does KC defense do on 3rd and long?" data-team="KC" data-side="defense">KC · 3RD &amp; LONG</button>
+            <button class="example-button" data-question="How does SF run the ball in the red zone?" data-team="SF" data-side="offense">SF · RED ZONE RUN</button>
+            <button class="example-button" data-question="What happens when BUF trails in the 4th quarter?" data-team="BUF" data-side="offense">BUF · LATE GAME</button>
+          </div>
+        </section>
+
+        <div id="loading" class="loading hidden"><span class="loader"></span> Reading the tape<span class="loading-dots">...</span></div>
+        <div id="error" class="error hidden"></div>
+
+        <section id="results" class="results hidden">
+          <div class="results-head">
+            <div>
+              <div class="card-label">02 / SCOUTING REPORT</div>
+              <h2 id="result-question"></h2>
+            </div>
+            <div id="mode-badge" class="mode-badge"></div>
+          </div>
+
+          <div class="report-grid">
+            <article class="summary-panel panel">
+              <div class="panel-kicker">EXECUTIVE READ</div>
+              <p id="summary"></p>
+              <div class="confidence-line"><span>CONFIDENCE</span><strong id="confidence"></strong></div>
+            </article>
+            <aside class="stats-panel panel">
+              <div class="panel-kicker">SAMPLE PROFILE</div>
+              <div id="stats" class="stats-list"></div>
+            </aside>
+          </div>
+
+          <div class="section-heading"><span class="section-number">03</span><h3>TENDENCIES</h3><span class="rule"></span></div>
+          <div id="tendencies" class="tendency-grid"></div>
+
+          <div class="section-heading"><span class="section-number">04</span><h3>MATCHUP HYPOTHESES</h3><span class="rule"></span></div>
+          <div id="matchup-ideas" class="ideas-list"></div>
+
+          <div class="evidence-header">
+            <div class="section-heading"><span class="section-number">05</span><h3>EVIDENCE LEDGER</h3><span class="rule"></span></div>
+            <div id="filter-summary" class="filter-summary"></div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>CITATION</th><th>SITUATION</th><th>PLAY</th><th>RESULT</th><th>EPA</th></tr></thead>
+              <tbody id="evidence-body"></tbody>
+            </table>
+          </div>
+
+          <details class="limitations panel">
+            <summary>Limitations &amp; method notes</summary>
+            <ul id="limitations"></ul>
+          </details>
+        </section>
+
+        <section class="how-it-works">
+          <div class="card-label">HOW IT WORKS</div>
+          <div class="method-grid">
+            <div><span class="method-index">01</span><h3>RETRIEVE</h3><p>Natural language is translated into transparent football filters before the model sees any evidence.</p></div>
+            <div><span class="method-index">02</span><h3>GROUND</h3><p>Claude receives delimited play data and must cite exact play IDs instead of guessing from general football knowledge.</p></div>
+            <div><span class="method-index">03</span><h3>EVALUATE</h3><p>Structured JSON, confidence labels, fallback notices, and a local test suite make the assistant inspectable.</p></div>
+          </div>
+        </section>
+      </main>
+
+    </div>
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+  </body>
+</html>
