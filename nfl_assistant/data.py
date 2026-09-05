@@ -43,6 +43,47 @@ NUMERIC_FIELDS = {
     "play_id",
 }
 
+# NFLverse includes hundreds of fields. Gridline Scout only needs this compact
+# subset for retrieval, statistics, citations, and the Claude evidence packet.
+# Keeping unused columns out of memory is important on small hosted instances.
+REQUIRED_FIELDS = {
+    "aborted_play",
+    "blitz",
+    "complete_pass",
+    "defteam",
+    "desc",
+    "down",
+    "epa",
+    "first_down",
+    "fumble_lost",
+    "game_id",
+    "interception",
+    "no_play",
+    "no_huddle",
+    "pass_length",
+    "pass_location",
+    "passer_player_name",
+    "play_id",
+    "play_type",
+    "posteam",
+    "qb_hit",
+    "qtr",
+    "quarter_seconds_remaining",
+    "receiver_player_name",
+    "run_location",
+    "rusher_player_name",
+    "sack",
+    "score_differential",
+    "season",
+    "shotgun",
+    "success",
+    "touchdown",
+    "week",
+    "yardline_100",
+    "yards_gained",
+    "ydstogo",
+}
+
 
 def _number(value: str | None) -> int | float | None:
     if value is None or value == "":
@@ -56,8 +97,8 @@ def _number(value: str | None) -> int | float | None:
 
 def _clean_row(row: dict[str, str]) -> dict[str, Any]:
     cleaned: dict[str, Any] = {}
-    for key, value in row.items():
-        normalized_key = key.strip().lower()
+    for normalized_key in REQUIRED_FIELDS:
+        value = row.get(normalized_key, "")
         cleaned[normalized_key] = _number(value) if normalized_key in NUMERIC_FIELDS else (value or "")
     return cleaned
 
